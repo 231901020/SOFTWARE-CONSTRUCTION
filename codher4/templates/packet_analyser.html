@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Packet Analyser</h2>
+
+<!-- Display last 20 packet logs -->
+<h3>Captured Packet Logs:</h3>
+<pre>{{ packet_logs[-20:] | join("\n") }}</pre>
+
+<!-- Button to download captured pcap -->
+<a href="{{ url_for('download_pcap') }}">
+    <button>Download Captured Packets (PCAP)</button>
+</a>
+
+<!-- Real-Time Protocol Count Graph -->
+<h3>Live Packet Count (TCP, UDP, ICMP)</h3>
+<canvas id="graph" width="600" height="300"></canvas>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Include your custom JS -->
+<script src="{{ url_for('static', filename='js/packet_graph.js') }}"></script>
+{% endblock %}

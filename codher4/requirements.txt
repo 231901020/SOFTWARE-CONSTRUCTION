@@ -1,0 +1,7 @@
+Flask
+psutil
+scapy
+cryptography
+pycryptodome
+stegano
+openai

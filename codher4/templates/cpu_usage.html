@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📊 Real-Time CPU Usage Trends</h2>
+<canvas id="cpuChart" width="800" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let cpuChart;
+
+    function fetchCPUData() {
+        fetch('/cpu_data')
+            .then(response => response.json())
+            .then(data => {
+                const labels = Object.keys(data);
+                const values = Object.values(data);
+
+                if (!cpuChart) {
+                    const ctx = document.getElementById('cpuChart').getContext('2d');
+                    cpuChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'CPU Usage (%)',
+                                data: values,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    cpuChart.data.labels = labels;
+                    cpuChart.data.datasets[0].data = values;
+                    cpuChart.update();
+                }
+            });
+    }
+
+    // Update every 3 seconds
+    setInterval(fetchCPUData, 3000);
+    fetchCPUData();
+</script>
+{% endblock %}
